@@ -1,7 +1,4 @@
 .venv/
 __pycache__/
-*.pkl
-.ipynb_checkpoints/
-rapport_analyse_business.pdf
 *.csv
 !apartments_for_rent_classified_10K.csv

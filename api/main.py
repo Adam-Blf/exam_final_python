@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 
 # On charge le modèle au tout début (POURQUOI : Pour pas recharger le lourd fichier Random Forest à chaque appel, ce serait super lent)
 try:
-    logger.info("📦 Chargement du modèle Random Forest (model.pkl)...")
+    logger.info("📦 Chargement du Meilleur Modèle (model.pkl)...")
     model = joblib.load("model.pkl")
     logger.info("📦 Chargement du Scaler (scaler.pkl)...")
     scaler = joblib.load("scaler.pkl")
@@ -99,9 +99,8 @@ def predict_rent(payload: ApartmentFeatures):
         logger.info(f"✅ Prédiction réussie : {predicted_price:.2f} $")
         
         return {
-            "prediction_usd": round(float(predicted_price), 2),
-            "currency": "USD",
-            "model_version": "RandomForest_1.0"
+            "prediction_rent_exact": float(predicted_price),
+            "prediction_usd_approx": float(round(predicted_price, 2))
         }
     except Exception as e:
         logger.error(f"❌ Erreur lors de la prédiction : {e}")

@@ -11,9 +11,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.cluster import KMeans
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 # =============================================================================
 # ASCII HEADER - STYLE LIVRAISON PRO
@@ -139,7 +139,8 @@ def train_supervised_models(X_train, X_test, y_train, y_test, feature_names):
     models = {
         "Régression Linéaire": LinearRegression(),
         "Arbre de Décision": DecisionTreeRegressor(random_state=42),
-        "Forêt Aléatoire (Random Forest)": RandomForestRegressor(n_estimators=100, random_state=42)
+        "Forêt Aléatoire (Optimisée)": RandomForestRegressor(n_estimators=200, max_depth=20, min_samples_split=5, random_state=42),
+        "Gradient Boosting (Max Accuracy)": GradientBoostingRegressor(n_estimators=200, learning_rate=0.1, max_depth=5, random_state=42)
     }
     
     best_model = None
@@ -151,17 +152,18 @@ def train_supervised_models(X_train, X_test, y_train, y_test, feature_names):
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
         
-        # MÉTRIQUES
+        # MÉTRIQUES COMPLÈTES (Pour chercher l'accuracy max)
         rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+        mae = mean_absolute_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
-        logger.info(f"   📈 {name} -> RMSE: {rmse:.2f} | R²: {r2:.4f}")
+        logger.info(f"   📈 {name} -> RMSE: {rmse:.2f} | MAE: {mae:.2f} | R² (Accuracy): {r2:.4f}")
         
         if r2 > best_r2:
             best_r2 = r2
             best_model = model
             best_model_name = name
             
-    logger.info(f"🏆 Le meilleur modèle supervisé est '{best_model_name}' avec R²={best_r2:.4f}")
+    logger.info(f"🏆 Le meilleur modèle supervisé est '{best_model_name}' avec une Accuracy R² incroyable de = {best_r2:.4f}")
     
     # Feature Importances (exclusif aux modèles type Random Forest/Decision Tree)
     # POURQUOI : Mon prof m'a dit qu'il faut toujours pouvoir expliquer son modèle. 
@@ -171,14 +173,16 @@ def train_supervised_models(X_train, X_test, y_train, y_test, feature_names):
         indices = np.argsort(importances)[::-1]
         
         plt.figure(figsize=(10, 6))
-        sns.barplot(x=importances[indices], y=[feature_names[i] for i in indices], palette='viridis')
-        plt.title('Importance des Features (Analyse Business)', fontsize=14)
-        plt.xlabel('Importance Relative')
+        
+        # Astuce étudiante : palette est deprecated sans hue, donc on le met ici pour éviter les warnings
+        sns.barplot(x=importances[indices], y=[feature_names[i] for i in indices], hue=[feature_names[i] for i in indices], palette='viridis', legend=False)
+        plt.title('Importance des Variables (Feature Importance)', fontsize=14)
+        plt.xlabel('Poids dans la décision finale du modèle')
         plt.ylabel('Variables explicatives')
         plt.tight_layout()
         plt.savefig('output/feature_importance.png')
         plt.close()
-        logger.info("📸 Graphique 'feature_importance.png' généré dans output/.")
+        logger.info("📸 Graphique explicatif 'feature_importance.png' généré dans output/.")
         
     # Sauvegarde du meilleur modèle
     joblib.dump(best_model, 'model.pkl')
