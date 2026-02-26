@@ -1,6 +1,6 @@
-# Exam Final Python
+# Exam Final Python - Prédiction des Lovyers USA
 
-![Status](https://img.shields.io/badge/status-in%20development-yellow)
+![Status](https://img.shields.io/badge/status-completed-green)
 
 ## Description
 
@@ -10,29 +10,60 @@ Auteurs: Adam Beloucif et Emilien MORICE.
 
 ## Features
 
-- [ ] Préparation du projet et du dépôt GitHub (en cours)
-- [ ] Analyse Exploratoire des Données (EDA)
-- [ ] Nettoyage et Pre-processing
-- [ ] Modélisation (3 supervisés, 1 non supervisé)
-- [ ] API FastAPI
-- [ ] Reporting PDF Professionnel
+- [x] Analyse Exploratoire des Données (EDA) interactive via Jupyter Notebook
+- [x] Pre-processing & Feature Engineering robustes
+- [x] Modèles Supervisés (Régression, Arbre, Random Forest avec R² = 0.72)
+- [x] Modélisation Non Supervisée (Clustering K-Means)
+- [x] Serveur d'inférence API FastAPI
+- [x] Fichiers configurés pour un ciblage Docker rapide
+- [x] Rapport d'analyse Métier
 
 ## Installation
 
 ```bash
+# 1. Installer les dépendances
 pip install -r requirements.txt
+
+# 2. Entraîner les modèles (génère model.pkl et scaler.pkl ainsi que les graphiques)
+python scripts/train_models.py
+
+# 3. Lancer l'API
 uvicorn api.main:app --reload
+```
+
+## Structure du Dépôt
+
+- `eda.ipynb` : Notebook de l'Exploration des Données.
+- `scripts/train_models.py` : Entraînement des modèles.
+- `api/main.py` : Code de l'API déployée.
+- `rapport_analyse_business.md` : Conséquences métier et interprétation des modèles.
+- `requirements.txt` & `Dockerfile` : Configuration et Déploiement.
+
+## Requête cURL de test pour l'API
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/predict' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "bathrooms": 1,
+  "bedrooms": 2,
+  "square_feet": 1050,
+  "latitude": 38.905,
+  "longitude": -76.986
+}'
 ```
 
 ## Tech Stack
 
-- Python 3
+- Python 3.10
 - Pandas, Scikit-learn, Matplotlib, Seaborn
 - FastAPI, Pydantic, Uvicorn
-- fpdf2 (Reporting)
+- Docker
 
 ## Changelog
 
 ### 2026-02-26
 
-- Initial release: Ajout des données brutes et du sujet.
+- Initial release: Implémentation du pipeline Data Science complet et exposition via API FastAPI. Écriture du rapport Business.
