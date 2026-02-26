@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 # Auteur       : Adam Beloucif et Emilien MORICE
 # Projet       : Examen Final Python Data Science
 # Date         : 2026-02-26
-# Description  : Exposition du modèle Random Forest via un endpoint /predict.
+# Description  : Mise en place d'une petite API pour que notre Random Forest soit utilisable depuis l'extérieur.
 # =============================================================================
 
 # Configuration Console UTF-8
@@ -37,7 +37,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Chargement du modèle et du scaler (POURQUOI : Éviter de recharger à chaque requête)
+# On charge le modèle au tout début (POURQUOI : Pour pas recharger le lourd fichier Random Forest à chaque appel, ce serait super lent)
 try:
     logger.info("📦 Chargement du modèle Random Forest (model.pkl)...")
     model = joblib.load("model.pkl")
@@ -58,8 +58,8 @@ app = FastAPI(
 # -----------------------------------------------------------------------------
 # Modèles de Validation (Pydantic)
 # -----------------------------------------------------------------------------
-# POURQUOI : Assurer la validation stricte des inputs de l'utilisateur. 
-# Si une variable est manquante ou aberrante, FastAPI renverra une erreur HTTP 422 claire.
+# POURQUOI : Pydantic c'est hyper pratique pour bloquer direct les requêtes qui envoient 
+# n'importe quoi (genre du texte au lieu d'un nombre). Ça évite de faire planter l'API.
 class ApartmentFeatures(BaseModel):
     bathrooms: float = Field(..., description="Nombre de salles de bain", example=1.0)
     bedrooms: float = Field(..., description="Nombre de chambres", example=2.0)
@@ -73,7 +73,7 @@ class ApartmentFeatures(BaseModel):
 @app.get("/health", summary="Vérifier la santé de l'API")
 def health_check():
     """
-    Retourne le statut de l'API. Très utile pour les Load Balancers ou Kubernetes.
+    Juste une petite route bidon pour vérifier que notre code tourne bien avant de tester le vrai modèle.
     """
     return {"status": "ok", "message": "API opérationnelle \U0001f680"}
 

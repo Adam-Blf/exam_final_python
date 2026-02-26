@@ -31,8 +31,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 # Auteur       : Adam Beloucif et Emilien MORICE
 # Projet       : Examen Final Python Data Science
 # Date         : 2026-02-26
-# Description  : Nettoyage, Pre-processing, Entraînement de 3 modèles supervisés et 
-#                1 cluster non supervisé, évaluation détaillée, et exports des poids.
+# Description  : Script principal pour mon projet de fin d'année. Ici on nettoie nos 
+#                données et on entraîne quelques modèles vus en cours (Régression, 
+#                Arbre, Random Forest).
 # =============================================================================
 
 # Forcer l'encodage de la console Windows en UTF-8 pour supporter les emojis et caractères spéciaux
@@ -57,12 +58,11 @@ os.makedirs("output", exist_ok=True)
 
 def load_and_clean_data(filepath: str) -> pd.DataFrame:
     """
-    Charge les données depuis un CSV et applique les règles de nettoyage.
-    POURQUOI : Le jeu de données initial contient beaucoup de valeurs aberrantes 
-    (prix irréalistes) et des valeurs manquantes qui fausseraient l'apprentissage 
-    de nos modèles immobiliers.
+    Charge les données depuis un CSV et nettoie les anomalies.
+    POURQUOI : Comme vu en TD, il y a souvent des valeurs bizarres dans les vrais datasets 
+    (loyers à 1$). Les retirer aide nos modèles à mieux apprendre la réalité du marché.
     """
-    logger.info("📦 Démarrage du chargement des données brutes...")
+    logger.info("📦 Je commence par charger le fichier CSV de base...")
     try:
         df = pd.read_csv(filepath, sep=';', encoding='cp1252')
         logger.info(f"✅ Données chargées avec succès : {df.shape[0]} lignes.")
@@ -70,22 +70,22 @@ def load_and_clean_data(filepath: str) -> pd.DataFrame:
         logger.error(f"❌ Erreur lors du chargement : {e}")
         sys.exit(1)
 
-    # 1. Sélection des features pertinentes (Feature Selection métier)
-    # POURQUOI : Simplifier le modèle en écartant les colonnes non structurées (textes)
-    # et conserver celles directement liées au prix du logement selon l'intuition métier.
+    # 1. Sélection des features pertinentes (Feature Selection)
+    # POURQUOI : On va faire simple et utiliser les variables numériques évidentes 
+    # (bathrooms, bedrooms, surface et latitude/longitude) pour pas s'embrouiller avec le texte.
     features = ['bathrooms', 'bedrooms', 'square_feet', 'latitude', 'longitude', 'price']
     df = df[features]
     
     # 2. Nettoyage des valeurs manquantes
-    # POURQUOI : Les algorithmes comme la régression linéaire ou Random Forest 
-    # ne supportent pas les NaN. La suppression est la méthode la plus sûre si le volume est faible.
+    # POURQUOI : Les algos de sklearn de base gèrent pas les valeurs nulles (les NaN). 
+    # Vu qu'on a beaucoup de données, jeter quelques lignes incomplètes c'est plus sûr qu'essayer de les deviner.
     initial_len = len(df)
     df = df.dropna()
     logger.info(f"🔍 Nettoyage NaN : {initial_len - len(df)} lignes supprimées.")
 
     # 3. Traitement des Outliers (Valeurs Aberrantes)
-    # POURQUOI : Un loyer à 1$ ou 1M$ biaise la moyenne et les prédictions. 
-    # On isole les biens "standards" (Ex: Loyer entre 300$ et 10,000$, surface > 200 sqft).
+    # POURQUOI : Un loyer à 1$ ça bousille completement nos moyennes. 
+    # On garde juste les apparts normaux entre 300$ et 10,000$, et plus de 200 sqft.
     df = df[(df['price'] > 300) & (df['price'] < 10000)]
     df = df[(df['square_feet'] > 200) & (df['square_feet'] < 10000)]
     
@@ -99,13 +99,11 @@ def load_and_clean_data(filepath: str) -> pd.DataFrame:
 
 def preprocess_data(df: pd.DataFrame):
     """
-    Sépare les données en variables explicatives (X) et cible (y), 
-    puis applique une normalisation.
-    POURQUOI : Les différentes variables n'ont pas la même échelle (prix vs latitude).
-    La normalisation (StandardScaler) aide les modèles basés sur les distances et optimise 
-    la convergence des algorithmes.
+    Sépare les données entre X (les features) et y (ce qu'on veut prédire, le prix).
+    POURQUOI : Les mètres carrés (milliers) et les latitudes (dizaines) ont des échelles très différentes !
+    Le StandardScaler met tout à plat pour que les modèles apprennent proportionnellement sans favoriser la surface à tort.
     """
-    logger.info("⚙️ Démarrage du Pre-Processing (Split & Scaling)...")
+    logger.info("⚙️ Démarrage du Pre-Processing : on sépare train/test et on applique un petit StandardScaler...")
     
     X = df.drop('price', axis=1)
     y = df['price']
@@ -132,11 +130,11 @@ def preprocess_data(df: pd.DataFrame):
 
 def train_supervised_models(X_train, X_test, y_train, y_test, feature_names):
     """
-    Entraîne trois modèles supervisés différents et sélectionne le meilleur.
-    POURQUOI : Permet de comparer un modèle linéaire simple avec des modèles non linéaires 
-    arborescents qui captent mieux les complexités métier.
+    Entraîne trois modèles supervisés et on garde le gagnant.
+    POURQUOI : C'est la démarche super classique du cours : on compare d'abord un modèle basique 
+    (Régression Linéaire) face à des modèles plus lourds comme Random Forest pour voir l'impact de la complexité.
     """
-    logger.info("🚀 Démarrage de l'entraînement des modèles supervisés...")
+    logger.info("🚀 C'est parti pour l'entraînement de nos modèles de Machine Learning...")
     
     models = {
         "Régression Linéaire": LinearRegression(),
@@ -165,9 +163,9 @@ def train_supervised_models(X_train, X_test, y_train, y_test, feature_names):
             
     logger.info(f"🏆 Le meilleur modèle supervisé est '{best_model_name}' avec R²={best_r2:.4f}")
     
-    # Feature Importances (exclusif aux modèles ensemblistes comme Random Forest)
-    # POURQUOI : Pour le reporting business, il faut expliquer quelles sont les variables 
-    # qui font grimper le prix du loyer.
+    # Feature Importances (exclusif aux modèles type Random Forest/Decision Tree)
+    # POURQUOI : Mon prof m'a dit qu'il faut toujours pouvoir expliquer son modèle. 
+    # Afficher l'importance des variables montre ce qui compte vraiment pour bien prédire un loyer de façon concrète.
     if hasattr(best_model, 'feature_importances_'):
         importances = best_model.feature_importances_
         indices = np.argsort(importances)[::-1]
@@ -194,11 +192,11 @@ def train_supervised_models(X_train, X_test, y_train, y_test, feature_names):
 
 def train_unsupervised_model(X_scaled_full, X_original):
     """
-    Entraîne un modèle K-Means pour grouper les annonces.
-    POURQUOI : Découvrir des 'segments' de biens immobiliers sans indications préalables.
-    Par exemple, segmenter en "Biens de luxe", "Biens familiaux", etc.
+    Petit modèle K-Means pour voir des tendances dans le marché.
+    POURQUOI : Histoire de rajouter une touche non-supervisée au projet ! Ça nous permet de 
+    segmenter le marché de façon automatique, peut-être qu'il regroupe de lui-même les petits studios vs les villas.
     """
-    logger.info("🧠 Démarrage de l'entraînement du modèle Non-Supervisé (K-Means)...")
+    logger.info("🧠 Et pour finir, on lance l'entraînement d'un petit clustering K-Means non supervisé...")
     
     # Hypothèse métier : 4 types d'appartements principaux
     kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
