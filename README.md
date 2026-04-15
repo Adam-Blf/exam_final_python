@@ -67,3 +67,10 @@ curl -X 'POST' \
 ### 2026-02-26
 
 - Initial release: Implémentation du pipeline Data Science complet et exposition via API FastAPI. Écriture du rapport Business.
+
+
+---
+
+<p align="center">
+  <sub>Par <a href="https://adam.beloucif.com">Adam Beloucif</a> · Data Engineer & Fullstack Developer · <a href="https://github.com/Adam-Blf">GitHub</a></sub>
+</p>
