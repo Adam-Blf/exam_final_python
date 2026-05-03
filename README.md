@@ -1,5 +1,7 @@
 # Exam Final Python - Prédiction des Lovyers USA
 
+[![EFREI Paris](https://img.shields.io/badge/EFREI-Paris-005CA9?style=flat-square&labelColor=000000)](https://www.efrei.fr/)
+
 ![Status](https://img.shields.io/badge/status-completed-green)
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
