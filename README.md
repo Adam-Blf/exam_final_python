@@ -19,6 +19,23 @@ Projet d'évaluation finale en Data Science. L'objectif est de prédire le prix 
 
 Auteurs: Adam Beloucif et Emilien MORICE.
 
+## Architecture
+
+```mermaid
+flowchart TB
+    DS["Dataset CSV<br/>10 000 annonces · loyers USA"]
+    EDA["eda.ipynb<br/>exploration · feature engineering"]
+    TRAIN["scripts/train_models.py<br/>RandomForest · K-Means"]
+    ART["Artefacts<br/>model.pkl · scaler.pkl"]
+    API["api/main.py<br/>FastAPI · POST /predict"]
+    DOCKER["Dockerfile<br/>conteneur d'inférence"]
+    DS --> EDA
+    EDA --> TRAIN
+    TRAIN --> ART
+    ART --> API
+    API --> DOCKER
+```
+
 ## Features
 
 - [x] Analyse Exploratoire des Données (EDA) interactive via Jupyter Notebook
