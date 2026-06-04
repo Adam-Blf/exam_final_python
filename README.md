@@ -102,3 +102,14 @@ curl -X 'POST' \
 <p align="center">
   <sub>Par <a href="https://adam.beloucif.com">Adam Beloucif</a> · Data Engineer & Fullstack Developer · <a href="https://github.com/Adam-Blf">GitHub</a> · <a href="https://www.linkedin.com/in/adambeloucif/">LinkedIn</a></sub>
 </p>
+
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=Adam-Blf%2Fexam_final_python&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Adam-Blf/exam_final_python&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Adam-Blf/exam_final_python&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Adam-Blf/exam_final_python&type=date&legend=top-left" />
+ </picture>
+</a>
