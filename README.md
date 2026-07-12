@@ -23,11 +23,11 @@ Auteurs: Adam Beloucif et Emilien MORICE.
 
 ```mermaid
 flowchart TB
-    DS["Dataset CSV<br/>10 000 annonces · loyers USA"]
-    EDA["eda.ipynb<br/>exploration · feature engineering"]
-    TRAIN["scripts/train_models.py<br/>RandomForest · K-Means"]
-    ART["Artefacts<br/>model.pkl · scaler.pkl"]
-    API["api/main.py<br/>FastAPI · POST /predict"]
+    DS["Dataset CSV<br/>10 000 annonces - loyers USA"]
+    EDA["eda.ipynb<br/>exploration - feature engineering"]
+    TRAIN["scripts/train_models.py<br/>RandomForest - K-Means"]
+    ART["Artefacts<br/>model.pkl - scaler.pkl"]
+    API["api/main.py<br/>FastAPI - POST /predict"]
     DOCKER["Dockerfile<br/>conteneur d'inférence"]
     DS --> EDA
     EDA --> TRAIN
@@ -100,7 +100,7 @@ curl -X 'POST' \
 ---
 
 <p align="center">
-  <sub>Par <a href="https://adam.beloucif.com">Adam Beloucif</a> · Data Engineer & Fullstack Developer · <a href="https://github.com/Adam-Blf">GitHub</a> · <a href="https://www.linkedin.com/in/adambeloucif/">LinkedIn</a></sub>
+  <sub>Par <a href="https://adam.beloucif.com">Adam Beloucif</a> - Data Engineer & Fullstack Developer - <a href="https://github.com/Adam-Blf">GitHub</a> - <a href="https://www.linkedin.com/in/adambeloucif/">LinkedIn</a></sub>
 </p>
 
 
