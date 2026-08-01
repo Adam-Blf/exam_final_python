@@ -1,5 +1,7 @@
 # Exam Final Python - Prédiction des Lovyers USA
 
+[![version](https://img.shields.io/badge/version-0.1.0-000091?style=flat-square)](https://github.com/Adam-Blf/exam_final_python/releases)
+
 <!-- adam-badges:start -->
 [![commits](https://img.shields.io/github/commit-activity/t/Adam-Blf/exam_final_python?color=001329&label=commits&style=flat-square)](https://github.com/Adam-Blf/exam_final_python/commits) [![visites](https://hits.sh/github.com/Adam-Blf/exam_final_python.svg?style=flat-square&label=visites&color=001329)](https://hits.sh/github.com/Adam-Blf/exam_final_python/) [![last commit](https://img.shields.io/github/last-commit/Adam-Blf/exam_final_python?color=D4A437&style=flat-square&label=dernier%20push)](https://github.com/Adam-Blf/exam_final_python/commits) [![top language](https://img.shields.io/github/languages/top/Adam-Blf/exam_final_python?style=flat-square)](https://github.com/Adam-Blf/exam_final_python) [![license](https://img.shields.io/github/license/Adam-Blf/exam_final_python?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
