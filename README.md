@@ -35,6 +35,19 @@ flowchart TB
     TRAIN --> ART
     ART --> API
     API --> DOCKER
+
+    classDef c0 fill:#2563eb,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    classDef c1 fill:#7c3aed,stroke:#4c1d95,stroke-width:2px,color:#ffffff
+    classDef c2 fill:#0891b2,stroke:#164e63,stroke-width:2px,color:#ffffff
+    classDef c3 fill:#16a34a,stroke:#14532d,stroke-width:2px,color:#ffffff
+    classDef c4 fill:#d97706,stroke:#78350f,stroke-width:2px,color:#ffffff
+    classDef c5 fill:#db2777,stroke:#831843,stroke-width:2px,color:#ffffff
+    class DS c0
+    class EDA c1
+    class TRAIN c2
+    class ART c3
+    class API c4
+    class DOCKER c5
 ```
 
 ## Features
